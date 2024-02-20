@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\User_data;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class UserController extends Controller
 {
@@ -16,6 +18,7 @@ class UserController extends Controller
             $validatedUser = Validator::make($request->all(), [
                 'name'=> 'required|min:3',
                 'last_name'=>'required|min:3',
+                'middle_name'=>'',
                 'email'=>'required|unique:users|email',
                 "password"=>'required|confirmed|min:6'
 
@@ -32,6 +35,14 @@ class UserController extends Controller
             $user = User::create([
                 'email'=>$request->email,
                 'password'=>Hash::make($request->password)
+            ]);
+
+
+            User_data::create([
+                'name'=>$request->name,
+                'user_id'=>$user->id,
+                'middle_name'=>$request->middle_name,
+                'last_name'=>$request->last_name
             ]);
 
             return Response()->json([
@@ -103,5 +114,17 @@ class UserController extends Controller
                 'message' => $th->getMessage()
             ], 400);
         }
+    }
+
+    public function getUser()
+    {
+        $token= request()->bearerToken();
+        $userToken = PersonalAccessToken::findToken($token);
+        $user = $userToken->tokenable;
+
+        return response()->json([
+            'status'=>true,
+            'data'=>User_data::where('user_id', $user->id)->first()
+        ], 200);
     }
 }

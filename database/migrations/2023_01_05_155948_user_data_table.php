@@ -15,14 +15,14 @@ return new class extends Migration
             $table->integer('id')->autoIncrement();
             $table->integer('user_id');
             $table->string('name',16);
-            $table->string('second_name',16);
+            $table->string('middle_name',16)->default("")->nullable();
             $table->string('last_name',16);
-            $table->integer('phone_num');
-            $table->integer('phone_code');
-            $table->string('country',32);
-            $table->string('address',64);
-            $table->string('city',16);
-            $table->string('zip',7);
+            $table->integer('phone_num')->nullable();
+            $table->integer('phone_code')->nullable();
+            $table->string('country',32)->nullable();
+            $table->string('address',64)->nullable();
+            $table->string('city',16)->nullable();
+            $table->string('zip',7)->nullable();
             $table->foreign('user_id')->references('id')->on('users');
 
         });
