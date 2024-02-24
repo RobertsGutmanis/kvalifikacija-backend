@@ -46,4 +46,16 @@ class ProductController extends Controller
     {
         return Products::where('id', $id)->first();
     }
+
+    public function categoryProducts(string $category)
+    {
+        $category_id = Categories::where('category', $category)->first()->id;
+
+        $products_by_category = Products::where('category_id', $category_id)->get();
+
+        return response()->json([
+            "success"=>true,
+            "data"=>$products_by_category
+        ], 200);
+    }
 }
