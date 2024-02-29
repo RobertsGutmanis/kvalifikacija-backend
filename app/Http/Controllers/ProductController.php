@@ -58,4 +58,15 @@ class ProductController extends Controller
             "data"=>$products_by_category
         ], 200);
     }
+
+    public function searchProduct(string $value)
+    {
+        $products = Products::where('name', $value)
+            ->orWhere('name', 'like', '%' . $value . '%')->get();
+
+        return response()->json([
+            "success"=>true,
+            "data"=>$products
+        ], 200);
+    }
 }
