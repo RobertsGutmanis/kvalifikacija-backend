@@ -18,3 +18,4 @@ Route::post('/products', [ProductController::class, "store"]);
 Route::get('/products/{id}', [ProductController::class, "show"]);
 Route::get('/catalog/{category}', [ProductController::class, "categoryProducts"]);
 Route::get('/search/{value}', [ProductController::class, "searchProduct"]);
+Route::post('/product/specification', [ProductController::class, "addProductSpec"]);

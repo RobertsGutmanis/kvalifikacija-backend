@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Categories;
 use App\Models\Products;
+use App\Models\specifications;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -44,7 +45,14 @@ class ProductController extends Controller
 
     public function show (string $id)
     {
-        return Products::where('id', $id)->first();
+        $specifications = specifications::where('product_id', $id)->get();
+        $product = Products::where('id', $id)->first();
+
+        return response()->json([
+            "staus"=>true,
+            "product"=>$product,
+            "specification"=>$specifications
+        ], 200);
     }
 
     public function categoryProducts(string $category)
@@ -53,9 +61,10 @@ class ProductController extends Controller
 
         $products_by_category = Products::where('category_id', $category_id)->get();
 
+
         return response()->json([
             "success"=>true,
-            "data"=>$products_by_category
+            "data"=>$products_by_category,
         ], 200);
     }
 
@@ -68,5 +77,19 @@ class ProductController extends Controller
             "success"=>true,
             "data"=>$products
         ], 200);
+    }
+
+    public function addProductSpec(Request $request)
+    {
+        specifications::create([
+            "product_id"=>$request->product_id,
+            "key"=>$request->key,
+            "value"=>$request->value
+        ]);
+
+        return response()->json([
+            "status"=>true,
+            "message"=>"Specification created"
+        ],200);
     }
 }
