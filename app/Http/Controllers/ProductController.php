@@ -92,4 +92,16 @@ class ProductController extends Controller
             "message"=>"Specification created"
         ],200);
     }
+
+    public function getWishlistProducts(Request $request)
+    {
+        $headers_arr = $request->header('wishlist_ids');
+        $headers_ids = json_decode($headers_arr, true);
+        $products = Products::whereIn('id', $headers_ids)->get();
+
+        return response()->json([
+            "status"=>true,
+            "data"=>$products
+        ], 200);
+    }
 }
