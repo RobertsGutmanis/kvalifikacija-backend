@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('name',32);
             $table->string('manufacturer', 32);
             $table->string('description',32);
-            $table->integer('price');
-            $table->integer('last_price');
+            $table->unsignedDouble('price');
+            $table->unsignedDouble('last_price');
             $table->date('price_change')->default(Carbon::now());
             $table->integer('category_id');
             $table->longText('image_url');

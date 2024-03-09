@@ -20,3 +20,4 @@ Route::get('/catalog/{category}', [ProductController::class, "categoryProducts"]
 Route::get('/search/{value}', [ProductController::class, "searchProduct"]);
 Route::post('/product/specification', [ProductController::class, "addProductSpec"]);
 Route::get('/wishlist', [ProductController::class, "getWishlistProducts"]);
+
