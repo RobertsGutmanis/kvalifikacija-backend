@@ -95,8 +95,7 @@ class ProductController extends Controller
 
     public function getWishlistProducts(Request $request)
     {
-        $headers_arr = $request->header('wishlist_ids');
-        $headers_ids = json_decode($headers_arr, true);
+        $headers_ids = json_decode($request->products, true);
         $products = Products::whereIn('id', $headers_ids)->get();
 
         return response()->json([
