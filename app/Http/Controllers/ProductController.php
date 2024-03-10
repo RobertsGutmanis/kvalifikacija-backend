@@ -6,52 +6,52 @@ use App\Models\Categories;
 use App\Models\Products;
 use App\Models\specifications;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
-    public function index(){
+    public function index()
+    {
 
         $products = Products::all();
 
-        foreach ($products as $product){
+        foreach ($products as $product) {
             $product->category = Categories::where('id', $product->category_id)->first("category")->category;
         }
 
         return response()->json([
-            'status'=>true,
-            'data'=>$products
+            'status' => true,
+            'data' => $products
         ]);
     }
 
     public function store(Request $request)
     {
         Products::create([
-            'name'=>$request->name,
-            'description'=>$request->description,
-            'manufacturer'=>$request->manufacturer,
-            'price'=>$request->price,
-            'last_price'=>$request->last_price,
-            'category_id'=>$request->category_id,
-            'image_url'=>$request->image_url
+            'name' => $request->name,
+            'description' => $request->description,
+            'manufacturer' => $request->manufacturer,
+            'price' => $request->price,
+            'last_price' => $request->last_price,
+            'category_id' => $request->category_id,
+            'image_url' => $request->image_url
         ]);
 
 
         return response()->json([
-            'status'=>true,
-            'message'=>'Product created!'
+            'status' => true,
+            'message' => 'Product created!'
         ]);
     }
 
-    public function show (string $id)
+    public function show(string $id)
     {
         $specifications = specifications::where('product_id', $id)->get();
         $product = Products::where('id', $id)->first();
 
         return response()->json([
-            "staus"=>true,
-            "product"=>$product,
-            "specification"=>$specifications
+            "staus" => true,
+            "product" => $product,
+            "specification" => $specifications
         ], 200);
     }
 
@@ -63,8 +63,8 @@ class ProductController extends Controller
 
 
         return response()->json([
-            "success"=>true,
-            "data"=>$products_by_category,
+            "success" => true,
+            "data" => $products_by_category,
         ], 200);
     }
 
@@ -74,33 +74,22 @@ class ProductController extends Controller
             ->orWhere('name', 'like', '%' . $value . '%')->get();
 
         return response()->json([
-            "success"=>true,
-            "data"=>$products
+            "success" => true,
+            "data" => $products
         ], 200);
     }
 
     public function addProductSpec(Request $request)
     {
         specifications::create([
-            "product_id"=>$request->product_id,
-            "key"=>$request->key,
-            "value"=>$request->value
+            "product_id" => $request->product_id,
+            "key" => $request->key,
+            "value" => $request->value
         ]);
 
         return response()->json([
-            "status"=>true,
-            "message"=>"Specification created"
-        ],200);
-    }
-
-    public function getWishlistProducts(Request $request)
-    {
-        $headers_ids = json_decode($request->products, true);
-        $products = Products::whereIn('id', $headers_ids)->get();
-
-        return response()->json([
-            "status"=>true,
-            "data"=>$products
+            "status" => true,
+            "message" => "Specification created"
         ], 200);
     }
 }

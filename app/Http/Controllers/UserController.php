@@ -9,48 +9,49 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Sanctum\PersonalAccessToken;
+use Throwable;
 
 class UserController extends Controller
 {
     public function register(Request $request)
     {
-        try{
+        try {
             $validatedUser = Validator::make($request->all(), [
-                'name'=> 'required|min:3',
-                'last_name'=>'required|min:3',
-                'middle_name'=>'',
-                'email'=>'required|unique:users|email',
-                "password"=>'required|confirmed|min:6'
+                'name' => 'required|min:3',
+                'last_name' => 'required|min:3',
+                'middle_name' => '',
+                'email' => 'required|unique:users|email',
+                "password" => 'required|confirmed|min:6'
 
             ]);
 
-            if($validatedUser->fails()){
+            if ($validatedUser->fails()) {
                 return Response()->json([
-                    'status'=>false,
-                    'message'=>'validation error',
-                    'errors'=>$validatedUser->errors()
+                    'status' => false,
+                    'message' => 'validation error',
+                    'errors' => $validatedUser->errors()
                 ], 401);
             }
 
             $user = User::create([
-                'email'=>$request->email,
-                'password'=>Hash::make($request->password)
+                'email' => $request->email,
+                'password' => Hash::make($request->password)
             ]);
 
 
             User_data::create([
-                'name'=>$request->name,
-                'user_id'=>$user->id,
-                'middle_name'=>$request->middle_name,
-                'last_name'=>$request->last_name
+                'name' => $request->name,
+                'user_id' => $user->id,
+                'middle_name' => $request->middle_name,
+                'last_name' => $request->last_name
             ]);
 
             return Response()->json([
-                    'status'=>true,
-                    'message'=>'User created!',
-                    'token'=>$user->createToken("API TOKEN")->plainTextToken
-                ], 200);
-        }catch (\Throwable $th) {
+                'status' => true,
+                'message' => 'User created!',
+                'token' => $user->createToken("API TOKEN")->plainTextToken
+            ], 200);
+        } catch (Throwable $th) {
             return Response()->json([
                 'status' => false,
                 'message' => $th->getMessage()
@@ -60,37 +61,37 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
-        try{
+        try {
             $validatedUser = Validator::make($request->all(), [
-                'email'=>'required|email',
-                "password"=>'required'
+                'email' => 'required|email',
+                "password" => 'required'
 
             ]);
 
-            if($validatedUser->fails()) {
+            if ($validatedUser->fails()) {
                 return response()->json([
                     'stauts' => false,
                     'message' => 'Validation error',
-                    'errors'=>$validatedUser->errors()
+                    'errors' => $validatedUser->errors()
                 ], 401);
             }
 
-            if(!Auth::attempt($request->only(['email', 'password']))){
+            if (!Auth::attempt($request->only(['email', 'password']))) {
                 return response()->json([
-                    'stauts'=>false,
-                    'message'=>'Email and Password do not match',
+                    'stauts' => false,
+                    'message' => 'Email and Password do not match',
                 ], 401);
             }
 
             $user = User::where('email', $request->email)->first();
 
             return response()->json([
-                'status'=>true,
-                'message'=>'Login successful',
-                'token'=>$user->createToken("API TOKEN")->plainTextToken
+                'status' => true,
+                'message' => 'Login successful',
+                'token' => $user->createToken("API TOKEN")->plainTextToken
             ], 200);
 
-        }catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return Response()->json([
                 'status' => false,
                 'message' => $th->getMessage()
@@ -100,15 +101,15 @@ class UserController extends Controller
 
     public function logout()
     {
-        try{
+        try {
             Auth::user()->currentAccessToken()->delete();
 
             return Response()->json([
-                'status' =>true,
+                'status' => true,
                 'message' => "Successful logout!"
             ], 200);
 
-        }catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return Response()->json([
                 'status' => false,
                 'message' => $th->getMessage()
@@ -118,13 +119,13 @@ class UserController extends Controller
 
     public function getUser()
     {
-        $token= request()->bearerToken();
+        $token = request()->bearerToken();
         $userToken = PersonalAccessToken::findToken($token);
         $user = $userToken->tokenable;
 
         return response()->json([
-            'status'=>true,
-            'data'=>User_data::where('user_id', $user->id)->first()
+            'status' => true,
+            'data' => User_data::where('user_id', $user->id)->first()
         ], 200);
     }
 }

@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class specifications extends Model
 {
     use HasFactory;
-    protected $table = 'product_specifications';
-    protected $fillable = ['product_id', 'key', 'value'];
 
     public $timestamps = false;
+    protected $table = 'product_specifications';
+    protected $fillable = ['product_id', 'key', 'value'];
 }
 
