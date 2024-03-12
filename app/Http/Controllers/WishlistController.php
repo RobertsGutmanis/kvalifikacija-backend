@@ -11,7 +11,7 @@ use Laravel\Sanctum\PersonalAccessToken;
 
 class WishlistController extends Controller
 {
-    public function getWishlistProducts(Request $request)
+    public function getWishlistProducts()
     {
         $wishlist_products = [];
 
@@ -23,7 +23,6 @@ class WishlistController extends Controller
             $wishlist_item = Products::where("id", $item->product_id)->get()->first();
             $wishlist_products[] = $wishlist_item;
         }
-
 
         return response()->json([
             "status" => true,

@@ -22,6 +22,6 @@ Route::get('/search/{value}', [ProductController::class, "searchProduct"]);
 Route::post('/product/specification', [ProductController::class, "addProductSpec"]);
 
 
-Route::post('/wishlist/get', [WishlistController::class, "getWishlistProducts"]);
+Route::get('/wishlist', [WishlistController::class, "getWishlistProducts"]);
 Route::post('/wishlist', [WishlistController::class, "storeWishlistProducts"]);
 Route::post('/wishlist/delete', [WishlistController::class, "deleteWishlistProducts"]);
