@@ -128,4 +128,23 @@ class UserController extends Controller
             'data' => User_data::where('user_id', $user->id)->first()
         ], 200);
     }
+
+    public function updateUser(Request $request)
+    {
+        User_data::where('user_id', Auth::user()->id)->update([
+            'name'=>$request->name,
+            'middle_name' => $request->middle_name,
+            'last_name'=>$request->last_name,
+            'phone_num'=>$request->phone_num,
+            'country' => $request->country,
+            'city' => $request->city,
+            'address'=> $request->address,
+            'zip'=> $request->zip,
+        ]);
+
+        return response()->json([
+            "status"=>true,
+            "message"=>"User data successfuly updated!"
+        ], 200);
+    }
 }
