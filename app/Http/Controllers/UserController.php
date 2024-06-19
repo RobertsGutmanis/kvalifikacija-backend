@@ -148,6 +148,7 @@ class UserController extends Controller
     }
 
     public function deleteUser(Request $request){
+        User_data::where('user_id', Auth::user()->id)->delete();
         $user = User::find(Auth::user()->id);
         $user->delete();
 
