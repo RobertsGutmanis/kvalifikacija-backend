@@ -19,7 +19,6 @@ class UserController extends Controller
             $validatedUser = Validator::make($request->all(), [
                 'name' => 'required|min:3',
                 'last_name' => 'required|min:3',
-                'middle_name' => '',
                 'email' => 'required|unique:users|email',
                 "password" => 'required|confirmed|min:6'
 
@@ -42,7 +41,7 @@ class UserController extends Controller
             User_data::create([
                 'name' => $request->name,
                 'user_id' => $user->id,
-                'middle_name' => $request->middle_name,
+                'middle_name' => $request->middle_name or '',
                 'last_name' => $request->last_name
             ]);
 
@@ -145,6 +144,16 @@ class UserController extends Controller
         return response()->json([
             "status"=>true,
             "message"=>"User data successfuly updated!"
+        ], 200);
+    }
+
+    public function deleteUser(Request $request){
+        $user = User::find(Auth::user()->id);
+        $user->delete();
+
+        return response()->json([
+            "status"=>true,
+            "message"=>"User deleted!"
         ], 200);
     }
 }
