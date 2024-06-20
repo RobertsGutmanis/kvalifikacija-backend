@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WishlistController;
 use Illuminate\Http\Request;
@@ -12,6 +13,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get("/user", [UserController::class, 'getUser']);
     Route::patch('/user', [UserController::class, 'updateUser']);
     Route::delete('/user', [UserController::class, 'deleteUser']);
+
+    Route::post('/checkout', [StripeController::class, "checkout"]);
+    Route::get('/orders', [StripeController::class, "getOrders"]);
 });
 
 Route::post('/register', [UserController::class, "register"]);
